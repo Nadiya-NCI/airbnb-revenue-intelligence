@@ -1,0 +1,45 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+.env.*
+# Large source datasets
+data/raw/
+data/processed/airbnb_combined_raw.csv
+data/processed/airbnb_cleaned.csv
+
+# Uncompressed / intermediate model files
+models/airbnb_revenue_model.joblib
+models/airbnb_revenue_model_compressed.joblib
+
+# Assignment brief
+PGDAIBUS DA Project S3 202526-2.docx

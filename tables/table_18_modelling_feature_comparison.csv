@@ -1,0 +1,18 @@
+Variable,Model A: Investment,Model B1: Listing,Model B2: Host Portfolio,Model C: Pricing
+Property Type,✓,✓,✓,✓
+Listing Type,✓,✓,✓,✓
+Bedrooms,✓,✓,✓,✓
+Bathrooms,✓,✓,✓,✓
+Max Guests,✓,✓,✓,✓
+City,✓,✓,✓,✓
+Cancellation Policy,✓,✓,✓,✓
+Has Wifi,✓,✓,✓,✓
+Has Kitchen,✓,✓,✓,✓
+Has Parking,✓,✓,✓,✓
+Has Pool,✓,✓,✓,✓
+Has Air Conditioning,✓,✓,✓,✓
+Has Washer,✓,✓,✓,✓
+Airbnb Superhost,,✓,✓,✓
+Listing Age (Days),,✓,✓,✓
+Host Listing Count,,,✓,✓
+Log ADR,,,,✓
