@@ -993,414 +993,538 @@ else:
 # Revenue estimator
 # ---------------------------------------------------------
 
-st.markdown("---")
-st.markdown("## 💰 Revenue Estimator")
+@st.fragment
+def revenue_estimator():
 
-st.caption(
-    "Adjust the listing characteristics below to estimate annual Airbnb revenue "
-    "using the final tuned Random Forest model."
-)
+    st.markdown("---")
+    st.markdown("## 💰 Revenue Estimator")
 
-st.info(
-    "The estimator opens with a real Airbnb listing from the dataset. "
-    "You can modify any values to explore different investment scenarios."
-)
+    st.caption(
+        "Adjust the listing characteristics below to estimate annual Airbnb revenue "
+        "using the final tuned Random Forest model."
+    )
 
-# ---------------------------------------------------------
-# Prediction options
-# ---------------------------------------------------------
+    st.info(
+        "The estimator opens with a real Airbnb listing from the dataset. "
+        "You can modify any values to explore different investment scenarios."
+    )
 
-prediction_city_options = city_options
-prediction_property_options = property_options
-prediction_listing_options = listing_type_options
+    # ---------------------------------------------------------
+    # Prediction options
+    # ---------------------------------------------------------
 
-prediction_policy_options = sorted(
-    airbnb[
-        "Cancellation Policy"
-    ]
-    .dropna()
-    .unique()
-    .tolist()
-)
+    prediction_city_options = city_options
+    prediction_property_options = property_options
+    prediction_listing_options = listing_type_options
 
-# ---------------------------------------------------------
-# Prediction inputs
-# ---------------------------------------------------------
+    prediction_policy_options = sorted(
+        airbnb[
+            "Cancellation Policy"
+        ]
+        .dropna()
+        .unique()
+        .tolist()
+    )
 
-input_col1, input_col2, input_col3 = st.columns(3)
+    # ---------------------------------------------------------
+    # Prediction inputs
+    # ---------------------------------------------------------
 
-# =========================================================
-# Location & Property
-# =========================================================
+    input_col1, input_col2, input_col3 = st.columns(3)
 
-with input_col1:
+    # =========================================================
+    # Location & Property
+    # =========================================================
 
-    st.markdown("#### 📍 Location & Property")
+    with input_col1:
 
-    prediction_city = st.selectbox(
-        "City",
-        prediction_city_options,
-        index=option_index(
+        st.markdown("#### 📍 Location & Property")
+
+        prediction_city = st.selectbox(
+            "City",
             prediction_city_options,
-            default_listing["City"]
-        ),
-        key="prediction_city"
-    )
+            index=option_index(
+                prediction_city_options,
+                default_listing["City"]
+            ),
+            key="prediction_city"
+        )
 
-    prediction_property = st.selectbox(
-        "Property Type",
-        prediction_property_options,
-        index=option_index(
+        prediction_property = st.selectbox(
+            "Property Type",
             prediction_property_options,
-            default_listing["Property Type"]
-        ),
-        key="prediction_property"
-    )
+            index=option_index(
+                prediction_property_options,
+                default_listing["Property Type"]
+            ),
+            key="prediction_property"
+        )
 
-    prediction_listing = st.selectbox(
-        "Listing Type",
-        prediction_listing_options,
-        index=option_index(
+        prediction_listing = st.selectbox(
+            "Listing Type",
             prediction_listing_options,
-            default_listing["Listing Type"]
-        ),
-        format_func=display_label,
-        key="prediction_listing"
-    )
+            index=option_index(
+                prediction_listing_options,
+                default_listing["Listing Type"]
+            ),
+            format_func=display_label,
+            key="prediction_listing"
+        )
 
-    prediction_policy = st.selectbox(
-        "Cancellation Policy",
-        prediction_policy_options,
-        index=option_index(
+        prediction_policy = st.selectbox(
+            "Cancellation Policy",
             prediction_policy_options,
-            default_listing["Cancellation Policy"]
-        ),
-        format_func=display_label,
-        key="prediction_policy"
-    )
+            index=option_index(
+                prediction_policy_options,
+                default_listing["Cancellation Policy"]
+            ),
+            format_func=display_label,
+            key="prediction_policy"
+        )
 
-# =========================================================
-# Property Details
-# =========================================================
+    # =========================================================
+    # Property Details
+    # =========================================================
 
-with input_col2:
+    with input_col2:
 
-    st.markdown("#### 🏠 Property Details")
+        st.markdown("#### 🏠 Property Details")
 
-    prediction_bedrooms = st.number_input(
-        "Bedrooms",
-        min_value=0,
-        max_value=20,
-        value=int(
-            default_listing["Bedrooms"]
-        ),
-        step=1
-    )
+        prediction_bedrooms = st.number_input(
+            "Bedrooms",
+            min_value=0,
+            max_value=20,
+            value=int(
+                default_listing["Bedrooms"]
+            ),
+            step=1,
+            key="prediction_bedrooms"
+        )
 
-    bathroom_options = [
-        x / 2
-        for x in range(0, 41)
-    ]
+        bathroom_options = [
+            x / 2
+            for x in range(0, 41)
+        ]
 
-    prediction_bathrooms = st.selectbox(
-        "Bathrooms",
-        bathroom_options,
-        index=option_index(
+        prediction_bathrooms = st.selectbox(
+            "Bathrooms",
             bathroom_options,
-            float(
-                default_listing["Bathrooms"]
-            )
-        ),
-        format_func=lambda value: f"{value:g}"
-    )
+            index=option_index(
+                bathroom_options,
+                float(
+                    default_listing["Bathrooms"]
+                )
+            ),
+            format_func=lambda value: f"{value:g}",
+            key="prediction_bathrooms"
+        )
 
-    prediction_guests = st.number_input(
-        "Maximum Guests",
-        min_value=1,
-        max_value=40,
-        value=int(
-            default_listing["Max Guests"]
-        ),
-        step=1
-    )
+        prediction_guests = st.number_input(
+            "Maximum Guests",
+            min_value=1,
+            max_value=40,
+            value=int(
+                default_listing["Max Guests"]
+            ),
+            step=1,
+            key="prediction_guests"
+        )
 
-    prediction_adr = st.number_input(
-        "Average Daily Rate (USD)",
-        min_value=1.0,
-        max_value=5000.0,
-        value=float(
-            default_listing[
-                "Average Daily Rate (USD)"
-            ]
-        ),
-        step=10.0,
-        format="%.0f"
-    )
+        prediction_adr = st.number_input(
+            "Average Daily Rate (USD)",
+            min_value=1.0,
+            max_value=5000.0,
+            value=float(
+                default_listing[
+                    "Average Daily Rate (USD)"
+                ]
+            ),
+            step=10.0,
+            format="%.0f",
+            key="prediction_adr"
+        )
 
-# =========================================================
-# Host & Amenities
-# =========================================================
+    # =========================================================
+    # Host & Amenities
+    # =========================================================
 
-with input_col3:
+    with input_col3:
 
-    st.markdown("#### ⭐ Host & Amenities")
+        st.markdown("#### ⭐ Host & Amenities")
 
-    prediction_listing_age = st.number_input(
-        "Listing Age (Days)",
-        min_value=0,
-        max_value=10000,
-        value=int(
-            default_listing[
-                "Listing Age (Days)"
-            ]
-        ),
-        step=30
-    )
+        prediction_listing_age = st.number_input(
+            "Listing Age (Days)",
+            min_value=0,
+            max_value=10000,
+            value=int(
+                default_listing[
+                    "Listing Age (Days)"
+                ]
+            ),
+            step=30,
+            key="prediction_listing_age"
+        )
 
-    prediction_host_count = st.number_input(
-        "Host Listing Count",
-        min_value=0,
-        max_value=10000,
-        value=int(
-            default_listing[
-                "Host Listing Count"
-            ]
-        ),
-        step=1
-    )
+        prediction_host_count = st.number_input(
+            "Host Listing Count",
+            min_value=0,
+            max_value=10000,
+            value=int(
+                default_listing[
+                    "Host Listing Count"
+                ]
+            ),
+            step=1,
+            key="prediction_host_count"
+        )
 
-    superhost_options = [
-        "f",
-        "t"
-    ]
+        superhost_options = [
+            "f",
+            "t"
+        ]
 
-    prediction_superhost = st.selectbox(
-        "Airbnb Superhost",
-        superhost_options,
-        index=option_index(
+        prediction_superhost = st.selectbox(
+            "Airbnb Superhost",
             superhost_options,
-            default_listing[
-                "Airbnb Superhost"
-            ]
-        ),
-        format_func=lambda value: (
-            "Yes"
-            if value == "t"
-            else "No"
+            index=option_index(
+                superhost_options,
+                default_listing[
+                    "Airbnb Superhost"
+                ]
+            ),
+            format_func=lambda value: (
+                "Yes"
+                if value == "t"
+                else "No"
+            ),
+            key="prediction_superhost"
         )
+
+        default_amenities = []
+
+        if default_listing["Has Wifi"] == 1:
+            default_amenities.append("Wifi")
+
+        if default_listing["Has Kitchen"] == 1:
+            default_amenities.append("Kitchen")
+
+        if default_listing["Has Parking"] == 1:
+            default_amenities.append("Parking")
+
+        if default_listing["Has Pool"] == 1:
+            default_amenities.append("Pool")
+
+        if default_listing["Has Air Conditioning"] == 1:
+            default_amenities.append(
+                "Air Conditioning"
+            )
+
+        if default_listing["Has Washer"] == 1:
+            default_amenities.append("Washer")
+
+        prediction_amenities = st.multiselect(
+            "Amenities",
+            [
+                "Wifi",
+                "Kitchen",
+                "Parking",
+                "Pool",
+                "Air Conditioning",
+                "Washer"
+            ],
+            default=default_amenities,
+            key="prediction_amenities"
+        )
+
+    st.markdown(
+        "<br>",
+        unsafe_allow_html=True
     )
 
-    default_amenities = []
+    # ---------------------------------------------------------
+    # Build prediction record
+    # ---------------------------------------------------------
 
-    if default_listing["Has Wifi"] == 1:
-        default_amenities.append("Wifi")
-
-    if default_listing["Has Kitchen"] == 1:
-        default_amenities.append("Kitchen")
-
-    if default_listing["Has Parking"] == 1:
-        default_amenities.append("Parking")
-
-    if default_listing["Has Pool"] == 1:
-        default_amenities.append("Pool")
-
-    if default_listing["Has Air Conditioning"] == 1:
-        default_amenities.append(
-            "Air Conditioning"
-        )
-
-    if default_listing["Has Washer"] == 1:
-        default_amenities.append("Washer")
-
-    prediction_amenities = st.multiselect(
-        "Amenities",
-        [
-            "Wifi",
-            "Kitchen",
-            "Parking",
-            "Pool",
-            "Air Conditioning",
-            "Washer"
+    prediction_record = pd.DataFrame({
+        "Property Type": [
+            prediction_property
         ],
-        default=default_amenities
+        "Listing Type": [
+            prediction_listing
+        ],
+        "Bedrooms": [
+            prediction_bedrooms
+        ],
+        "Bathrooms": [
+            prediction_bathrooms
+        ],
+        "Max Guests": [
+            prediction_guests
+        ],
+        "City": [
+            prediction_city
+        ],
+        "Cancellation Policy": [
+            prediction_policy
+        ],
+        "Has Wifi": [
+            int(
+                "Wifi"
+                in prediction_amenities
+            )
+        ],
+        "Has Kitchen": [
+            int(
+                "Kitchen"
+                in prediction_amenities
+            )
+        ],
+        "Has Parking": [
+            int(
+                "Parking"
+                in prediction_amenities
+            )
+        ],
+        "Has Pool": [
+            int(
+                "Pool"
+                in prediction_amenities
+            )
+        ],
+        "Has Air Conditioning": [
+            int(
+                "Air Conditioning"
+                in prediction_amenities
+            )
+        ],
+        "Has Washer": [
+            int(
+                "Washer"
+                in prediction_amenities
+            )
+        ],
+        "Airbnb Superhost": [
+            prediction_superhost
+        ],
+        "Listing Age (Days)": [
+            prediction_listing_age
+        ],
+        "Host Listing Count": [
+            prediction_host_count
+        ],
+        "Log ADR": [
+            np.log1p(
+                prediction_adr
+            )
+        ]
+    })
+
+    # ---------------------------------------------------------
+    # Prediction button
+    # ---------------------------------------------------------
+
+    st.markdown("---")
+
+    left, centre, right = st.columns(
+        [2, 3, 2]
     )
 
-st.markdown("<br>", unsafe_allow_html=True)
+    with centre:
 
-# ---------------------------------------------------------
-# Build prediction record
-# ---------------------------------------------------------
+        predict_clicked = st.button(
+            "Estimate Annual Revenue",
+            type="primary",
+            width="stretch",
+            key="prediction_button"
+        )
 
-prediction_record = pd.DataFrame({
-    "Property Type": [prediction_property],
-    "Listing Type": [prediction_listing],
-    "Bedrooms": [prediction_bedrooms],
-    "Bathrooms": [prediction_bathrooms],
-    "Max Guests": [prediction_guests],
-    "City": [prediction_city],
-    "Cancellation Policy": [prediction_policy],
-    "Has Wifi": [int("Wifi" in prediction_amenities)],
-    "Has Kitchen": [int("Kitchen" in prediction_amenities)],
-    "Has Parking": [int("Parking" in prediction_amenities)],
-    "Has Pool": [int("Pool" in prediction_amenities)],
-    "Has Air Conditioning": [int("Air Conditioning" in prediction_amenities)],
-    "Has Washer": [int("Washer" in prediction_amenities)],
-    "Airbnb Superhost": [prediction_superhost],
-    "Listing Age (Days)": [prediction_listing_age],
-    "Host Listing Count": [prediction_host_count],
-    "Log ADR": [np.log1p(prediction_adr)]
-})
+    # ---------------------------------------------------------
+    # Generate prediction
+    # ---------------------------------------------------------
 
+    if predict_clicked:
 
-# ---------------------------------------------------------
-# Prediction button
-# ---------------------------------------------------------
+        predicted_log_revenue = (
+            model.predict(
+                prediction_record
+            )[0]
+        )
 
-st.markdown("---")
+        predicted_revenue = max(
+            np.expm1(
+                predicted_log_revenue
+            ),
+            0
+        )
 
-left, centre, right = st.columns([2, 3, 2])
-
-with centre:
-    predict_clicked = st.button(
-        "Estimate Annual Revenue",
-        type="primary",
-        use_container_width=True
-    )
-
-
-# ---------------------------------------------------------
-# Generate prediction
-# ---------------------------------------------------------
-
-if predict_clicked:
-
-    predicted_log_revenue = model.predict(
-        prediction_record
-    )[0]
-
-    predicted_revenue = max(
-        np.expm1(predicted_log_revenue),
-        0
-    )
-
-    # -----------------------------------------------------
-    # Comparable listings
-    # -----------------------------------------------------
-
-    comparable_market = airbnb[
-        (airbnb["City"] == prediction_city)
-        &
-        (airbnb["Property Type"] == prediction_property)
-        &
-        (airbnb["Listing Type"] == prediction_listing)
-    ]
-
-    comparison_label = "Similar Listings"
-
-    if len(comparable_market) < 30:
+        # -----------------------------------------------------
+        # Comparable listings
+        # -----------------------------------------------------
 
         comparable_market = airbnb[
-            (airbnb["City"] == prediction_city)
+            (
+                airbnb["City"]
+                == prediction_city
+            )
             &
-            (airbnb["Listing Type"] == prediction_listing)
+            (
+                airbnb["Property Type"]
+                == prediction_property
+            )
+            &
+            (
+                airbnb["Listing Type"]
+                == prediction_listing
+            )
         ]
 
         comparison_label = (
-            f"{prediction_city} "
-            f"{display_label(prediction_listing)} Listings"
+            "Similar Listings"
         )
 
-    if len(comparable_market) < 30:
+        # -----------------------------------------------------
+        # First fallback:
+        # same city and listing type
+        # -----------------------------------------------------
 
-        comparable_market = airbnb[
-            airbnb["City"] == prediction_city
-        ]
+        if len(comparable_market) < 30:
 
-        comparison_label = (
-            f"{prediction_city} Listings"
+            comparable_market = airbnb[
+                (
+                    airbnb["City"]
+                    == prediction_city
+                )
+                &
+                (
+                    airbnb["Listing Type"]
+                    == prediction_listing
+                )
+            ]
+
+            comparison_label = (
+                f"{prediction_city} "
+                f"{display_label(prediction_listing)} Listings"
+            )
+
+        # -----------------------------------------------------
+        # Second fallback:
+        # city only
+        # -----------------------------------------------------
+
+        if len(comparable_market) < 30:
+
+            comparable_market = airbnb[
+                airbnb["City"]
+                == prediction_city
+            ]
+
+            comparison_label = (
+                f"{prediction_city} Listings"
+            )
+
+        benchmark_revenue = (
+            comparable_market[
+                "Annual Revenue LTM (USD)"
+            ]
+            .median()
         )
 
-    benchmark_revenue = (
-        comparable_market[
-            "Annual Revenue LTM (USD)"
-        ]
-        .median()
-    )
-
-    difference = (
-        predicted_revenue
-        - benchmark_revenue
-    )
-
-    difference_percentage = (
-        difference
-        / benchmark_revenue
-        * 100
-        if benchmark_revenue > 0
-        else np.nan
-    )
-
-    # -----------------------------------------------------
-    # Prediction results
-    # -----------------------------------------------------
-
-    st.markdown("### Estimated Performance")
-
-    result_col1, result_col2, result_col3 = st.columns(3)
-
-    with result_col1:
-
-        st.metric(
-            "💰 Estimated Revenue",
-            f"${predicted_revenue:,.0f}"
+        difference = (
+            predicted_revenue
+            - benchmark_revenue
         )
 
-    with result_col2:
-
-        st.metric(
-            "📊 Comparable Median",
-            f"${benchmark_revenue:,.0f}"
+        difference_percentage = (
+            difference
+            / benchmark_revenue
+            * 100
+            if benchmark_revenue > 0
+            else np.nan
         )
 
-    with result_col3:
+        # -----------------------------------------------------
+        # Prediction results
+        # -----------------------------------------------------
 
-        st.metric(
-            "Difference",
-            f"{difference_percentage:+.1f}%"
+        st.markdown(
+            "### Estimated Performance"
         )
 
-    st.caption(
-        f"Benchmark calculated from **{len(comparable_market):,} listings** "
-        f"within **{comparison_label}**."
-    )
-
-    # -----------------------------------------------------
-    # Interpretation
-    # -----------------------------------------------------
-
-    if predicted_revenue >= benchmark_revenue * 1.20:
-
-        st.success(
-            "Estimated revenue is above the comparable market median."
+        result_col1, result_col2, result_col3 = (
+            st.columns(3)
         )
 
-    elif predicted_revenue >= benchmark_revenue * 0.80:
+        with result_col1:
 
-        st.info(
-            "Estimated revenue is broadly aligned with comparable listings."
+            st.metric(
+                "💰 Estimated Revenue",
+                f"${predicted_revenue:,.0f}"
+            )
+
+        with result_col2:
+
+            st.metric(
+                "📊 Comparable Median",
+                f"${benchmark_revenue:,.0f}"
+            )
+
+        with result_col3:
+
+            st.metric(
+                "Difference",
+                f"{difference_percentage:+.1f}%"
+            )
+
+        st.caption(
+            f"Benchmark calculated from "
+            f"**{len(comparable_market):,} listings** "
+            f"within **{comparison_label}**."
         )
 
-    else:
+        # -----------------------------------------------------
+        # Interpretation
+        # -----------------------------------------------------
 
-        st.warning(
-            "Estimated revenue is below the comparable market median."
+        if (
+            predicted_revenue
+            >= benchmark_revenue * 1.20
+        ):
+
+            st.success(
+                "Estimated revenue is above the "
+                "comparable market median."
+            )
+
+        elif (
+            predicted_revenue
+            >= benchmark_revenue * 0.80
+        ):
+
+            st.info(
+                "Estimated revenue is broadly aligned "
+                "with comparable listings."
+            )
+
+        else:
+
+            st.warning(
+                "Estimated revenue is below the "
+                "comparable market median."
+            )
+
+        st.caption(
+            "Revenue estimates are generated by the tuned Random Forest model. "
+            "They should be interpreted as decision-support estimates rather "
+            "than guaranteed financial outcomes."
         )
 
-    st.caption(
-        "Revenue estimates are generated by the tuned Random Forest model. "
-        "They should be interpreted as decision-support estimates rather "
-        "than guaranteed financial outcomes."
-    )
+
+# ---------------------------------------------------------
+# Run Revenue Estimator
+# ---------------------------------------------------------
+
+revenue_estimator()
+
 # ---------------------------------------------------------
 # Model performance
 # ---------------------------------------------------------
